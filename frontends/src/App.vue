@@ -22,7 +22,6 @@ const userStore = useUserStore()
   <RouterView />
 </template>
 
-
 <style scoped>
 /* 네비게이션 바 스타일 */
 nav {
@@ -43,7 +42,21 @@ nav a {
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: bold;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.2s ease;
+}
+
+/* 링크 간 구분선 */
+nav a:not(:last-child)::after {
+  /* content: '|'; */
+  margin: 0 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 호버 효과: 색상 변경 및 텍스트 그림자 추가 */
+nav a:hover {
+  color: #ffdd57;
+  text-shadow: 0 2px 5px rgba(255, 221, 87, 0.8);
+  transform: scale(1.1);
 }
 
 /* 로그인된 사용자 이름 스타일 */
