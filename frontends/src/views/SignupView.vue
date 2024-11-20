@@ -20,29 +20,123 @@ const signUp = function() {
 </script>
 
 <template>
-  <div>
-    <h1>회원가입</h1>
-    <form @submit.prevent="signUp">
-      <div>
-        <label for="username">username: </label>
-        <input type="text" id="username" v-model="username">
-      </div>
+  <div class="signup-container">
+    <div class="signup-card">
+      <h1 class="signup-title">회원가입</h1>
+      <form @submit.prevent="signUp">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" v-model="username" placeholder="Enter your username" />
+        </div>
 
-      <div>
-        <label for="password1">password1: </label>
-        <input type="password" id="password1" v-model="password1">
-      </div>
+        <div class="form-group">
+          <label for="password1">Password</label>
+          <input type="password" id="password1" v-model="password1" placeholder="Enter your password" />
+        </div>
 
-      <div>
-        <label for="password2">password2: </label>
-        <input type="password" id="password2" v-model="password2">
-      </div>
+        <div class="form-group">
+          <label for="password2">Confirm Password</label>
+          <input type="password" id="password2" v-model="password2" placeholder="Confirm your password" />
+        </div>
 
-      <input type="submit" value="회원가입">
-    </form>
+        <button type="submit" class="signup-button">Sign Up</button>
+      </form>
+    </div>
   </div>
 </template>
 
 <style scoped>
+/* 전체 페이지 스타일 */
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
 
+/* 카드 스타일 */
+.signup-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* 제목 스타일 */
+.signup-title {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #2575fc;
+}
+
+/* 폼 그룹 스타일 */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #2575fc;
+}
+
+/* 버튼 스타일 */
+.signup-button {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #2575fc;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.signup-button:hover {
+  background-color: #1b5ab6;
+  transform: translateY(-2px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .signup-card {
+    padding: 15px 20px;
+  }
+
+  .signup-title {
+    font-size: 1.5rem;
+  }
+
+  .form-group input {
+    font-size: 0.9rem;
+  }
+
+  .signup-button {
+    font-size: 1rem;
+  }
+}
 </style>

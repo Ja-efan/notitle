@@ -1,4 +1,5 @@
 <script setup>
+import axios from 'axios';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -6,9 +7,32 @@ const username = ref('')
 const password = ref('')
 const router = useRouter()
 
-const logIn = function () {
-  console.log('Logging in with', username.value, password.value)
-  // 로그인 요청 처리 로직
+const logIn = async () => {
+  if (!username.value) {
+    alert("Username을 입력해주세요.")
+    return 
+  }
+  else if (!password.value) {
+    alert("Password를 입력해주세요.")
+    return 
+  }
+  try {
+    const payload = {
+      username: username.value,
+      password: password.value,
+    }
+    // backend server로 login 요청 
+    const response = await axios.post("http://127.0.0.1:8000/dj-rest-auth/login/", payload)
+    // 로그인 성공 처리 
+    alert("로그인 성공!")
+    // 토큰 저장 
+    localStorage.setItem('token', response.data.key)
+    console.log("로그인 성공: ", response.data)
+    router.push('/')
+  } catch (error) {
+    alert("로그인 실패: 아이디 또는 비밀번호를 확인해주세요.")
+    console.error("로그인 실패: ", error)
+  }
 }
 
 const goSignUp = function () {
