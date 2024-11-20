@@ -1,6 +1,8 @@
 <script setup>
 import { useUserStore } from '@/stores/user'
-import { useBoardStore } from '@/stores/board'
+// import { useBoardStore } from '@/stores/board'
+import { useNewsStore } from '@/stores/news'
+
 // setup: 아직 틀(DOM)이 완성되지 않음
 // onMounted: 라이프 사이클 훅
 //    데이터가 그려질 틀(DOM)이 완성되고 난 후 시점
@@ -12,33 +14,33 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const userStore = useUserStore()
-const boardStore = useBoardStore()
+const newsStore = useNewsStore()
 
 onMounted(() => {
-  boardStore.getBoards()
+  newsStore.getNews()
 })
 
-const goCreateBoard = function() {
-  router.push('/create-board')
-}
+// const goCreateBoard = function() {
+//   router.push('/create-board')
+// }
 </script>
 
 <template>
   <div>
-    <h1>게시글 출력</h1>
+    <h1>기사 출력</h1>
     <p v-if="userStore.loginUsername">로그인된 사용자: {{ userStore.loginUsername }}</p>
-    <button 
+    <!-- <button 
       v-if="userStore.loginUsername"
       @click="goCreateBoard"
-    >게시글 생성하기</button>
+    >게시글 생성하기</button> -->
     <div 
-      v-for="board in boardStore.boards"
-      :key="board.id"
+      v-for="news in newsStore.news"
+      :key="news.id"
       >
-      <p>{{ board.id }}번째 글</p>
-      <p>제목: {{ board.title }}</p>
-      <p>내용: {{ board.content }}</p>
-      <p>작성자: {{ board.writer }}</p>
+      <p>{{ news.id }}번째 글</p>
+      <p>제목: {{ news.news_title }}</p>
+      <p>내용: {{ news.content }}</p>
+      <p>작성자: {{ news.writer }}</p>
       <hr>
     </div>
   </div>
