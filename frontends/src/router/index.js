@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignupView from '@/views/SignupView.vue'
+import NewsDetailView from '@/views/NewsDetailView.vue'
 // import BoardCreateView from '@/views/BoardCreateView.vue'
 
 const router = createRouter({
@@ -14,6 +15,12 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/news/:id', // 동적 라우트 
+      name: 'NewsDetail',
+      component: NewsDetailView,
+      props: true, // ID를 props로 전달
     },
     {
       path: '/login',
