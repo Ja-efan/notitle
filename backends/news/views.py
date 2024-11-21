@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
+from rest_framework import status
 from django.shortcuts import render
 from django.http import JsonResponse
 
@@ -23,6 +23,26 @@ def news_list(request):
             # serializer.save(writer=request.user)
             return Response(serializer.data)
     else:
-        news = News.objects.all().order_by('-pk')
+        # 카테고리 필터링 
+        category = request.query_params.get('category', None)
+        print(f"사용자 선택 카테고리: {category}")
+        if category is None or category == '전체':
+            news = News.objects.all().order_by('-pk')
+        else:
+            news = News.objects.filter(category__category_name=category)
+
         serializer = NewsListSerializer(news, many=True)
-        return Response(serializer.data)
+        # print(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['GET'])
+def news_detail(request, id):
+    try :
+        news = News.objects.get(article_id=id)  # 
+        serializer = NewsSerializer(news)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except News.DoesNotExist:
+        return Response({'error': "News not found"}, status=status.HTTP_404_NOT_FOUND)
+        

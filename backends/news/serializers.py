@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import News, Category
+from .models import News, Category, MediaCompany
 
 # 게시글
 # 1. 전체 게시글 조회
@@ -14,14 +14,21 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ('id', 'category_name')
 
+class MediaCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaCompany
+        fields = ('id', 'company_name', 'company_id')
+        
+        
 class NewsListSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category_name = serializers.CharField(source='category.category_name')  # 카테고리 이름 매핑
+    media_company_name = serializers.CharField(source='media_company.company_name')  # 언론사 이름 매핑
+
     class Meta:
         model = News
-        fields = ('id', 'category', 'news_title', 'content', 'writer', 'published_date',)
+        fields = ('article_id', 'category_name', 'title', 'content', 'summary', 'writer', 'published_date', 'url', 'media_company_name')
 
-# 3. 상세 게시글 (조회, 수정)
-#   - 모든 필드 다 조회
+
 class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
