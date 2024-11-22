@@ -7,18 +7,24 @@ const userStore = useUserStore()
 </script>
 
 <template>
+  <!-- 네비게이션 바 -->
   <nav>
-    <!-- RouterLink 에서 경로를 선택하고 -->
-    <RouterLink to="/">메인 페이지</RouterLink> |
-    <RouterLink to="/login">로그인</RouterLink>
-    
-    <!-- 로그인된 사용자 이름 표시 -->
-    <span v-if="userStore.loginUsername" class="username">
-      | {{ userStore.loginUsername }}님
-    </span>
+    <!-- 플랫폼 이름 -->
+    <div class="platform-name">無愚題: 무우제</div>
+
+    <!-- 네비게이션 링크 -->
+    <div class="nav-links">
+      <RouterLink to="/">메인 페이지</RouterLink> |
+      <RouterLink to="/login">로그인</RouterLink> |
+      
+      <!-- 로그인된 사용자 이름 표시 -->
+      <span v-if="userStore.loginUsername" class="username">
+        {{ userStore.loginUsername }}님
+      </span>
+    </div>
   </nav>
 
-  <!-- RouterView 에 경로에 해당하는 컴포넌트가 출력된다. -->
+  <!-- RouterView -->
   <RouterView />
 </template>
 
@@ -28,12 +34,28 @@ nav {
   background-color: #2575fc;
   padding: 10px 20px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between; /* 양쪽 정렬 */
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
+  color: #fff;
+}
+
+/* 플랫폼 이름 스타일 */
+.platform-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* 네비게이션 링크 컨테이너 */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* 링크 간 간격 */
 }
 
 /* 네비게이션 링크 스타일 */
@@ -43,13 +65,6 @@ nav a {
   font-size: 1.1rem;
   font-weight: bold;
   transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.2s ease;
-}
-
-/* 링크 간 구분선 */
-nav a:not(:last-child)::after {
-  /* content: '|'; */
-  margin: 0 10px;
-  color: rgba(255, 255, 255, 0.7);
 }
 
 /* 호버 효과: 색상 변경 및 텍스트 그림자 추가 */
