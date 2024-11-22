@@ -7,9 +7,8 @@ class Category(models.Model):
         return self.category_name
 
 class MediaCompany(models.Model):
-    # id 
+    company_id = models.IntegerField(primary_key=True, unique=True)
     company_name = models.CharField(max_length=150, unique=True)
-    company_id = models.IntegerField(unique=True)
 
     def __str__(self):
         return self.comapany_name
@@ -20,6 +19,7 @@ class News(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="news")
     # 
     media_company = models.ForeignKey(MediaCompany, on_delete=models.CASCADE, related_name="news")
+    # 외래키가 기본 아이로 되어있어서 3자리 이상 못잡는거같은데
     writer = models.CharField(max_length=100, null=True, blank=True)
     content = models.TextField()
     published_date = models.DateTimeField()
@@ -31,6 +31,7 @@ class News(models.Model):
     # 추가적인 처리가 필요한 컬럼 : Spark -> OpenAI
     sentiment_score = models.FloatField(null=True, blank=True)
     summary = models.TextField(null=True, blank=True)
+    keyword = models.TextField(null=True, blank=True)
 
     # keyword 필드
     # 1. 추가 할건가?

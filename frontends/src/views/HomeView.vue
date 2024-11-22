@@ -48,6 +48,7 @@ const goToDetail = (id) => {
         @click="goToDetail(article.article_id)"> <!--클릭 이벤트 추가-->
         <h2 class="news-header">{{ article.title }}</h2>
         <p class="news-summary">{{ article.summary }}</p>
+        <p class="news-keyword">{{ article.keyword }}</p>
         <!-- <p class="news-content">{{ article.content }}</p> -->
         <div class="news-footer">
           <span class="news-category">카테고리: {{ article.category_name }}</span>
@@ -127,6 +128,30 @@ const goToDetail = (id) => {
   font-size: 1rem;
   color: #555;
   margin-bottom: 20px;
+}
+.news-summary {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  text-overflow: ellipsis; /* 긴 텍스트를 생략 표시 */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 최대 3줄로 제한 */
+  -webkit-box-orient: vertical;
+}
+
+/* 뉴스 키워드 스타일 */
+.news-keyword {
+  font-size: 0.9rem;
+  color: #2575fc;
+  font-weight: bold;
+  margin-bottom: 15px;
+  display: inline-block;
+  background: #e8f3ff; /* 배경색 추가 */
+  padding: 5px 10px;
+  border-radius: 8px;
+  text-transform: uppercase; /* 대문자로 변환 */
 }
 
 .news-footer {

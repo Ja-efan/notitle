@@ -17,7 +17,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class MediaCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaCompany
-        fields = ('id', 'company_name', 'company_id')
+        fields = ( 'company_name', 'company_id')
         
         
 class NewsListSerializer(serializers.ModelSerializer):
@@ -26,10 +26,12 @@ class NewsListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ('article_id', 'category_name', 'title', 'content', 'summary', 'writer', 'published_date', 'url', 'media_company_name')
+        fields = ('article_id', 'keyword', 'category_name', 'title', 'content', 'summary', 'writer', 'published_date', 'url', 'media_company_name')
 
 
 class NewsSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.category_name')  # 카테고리 이름 매핑
+    media_company_name = serializers.CharField(source='media_company.company_name')  # 언론사 이름 매핑
     class Meta:
         model = News
         fields = '__all__'

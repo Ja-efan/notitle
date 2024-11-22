@@ -20,7 +20,7 @@ const router = createRouter({
       path: '/news/:id', // 동적 라우트 
       name: 'NewsDetail',
       component: NewsDetailView,
-      props: true, // ID를 props로 전달
+      props: true // ID를 props로 전달
     },
     {
       path: '/login',

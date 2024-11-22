@@ -138,7 +138,7 @@ driver.quit()
 # import psycopg2
 #
 # # PostgreSQL DB에 연결
-# conn = psycopg2.connect(dbname="NewsDatabase", user="postgres", password="skadnwoghks", host="postgres-server")
+# conn = psycopg2.connect(dbname="", user="", password="", host="")
 # cursor = conn.cursor()
 #
 # # news_category 테이블에 데이터 삽입

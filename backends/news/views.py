@@ -39,6 +39,7 @@ def news_list(request):
 
 @api_view(['GET'])
 def news_detail(request, id):
+    print(f"사용자 선택 뉴스 ID: {id}")
     try :
         news = News.objects.get(article_id=id)  # 
         serializer = NewsSerializer(news)
