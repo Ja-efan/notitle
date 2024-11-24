@@ -184,3 +184,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # django 가 바라보는 회원 모델을
 # auth 에서 accounts.User 로 수정
 AUTH_USER_MODEL = 'accounts.User'
+
+# 이메일 확인 비활성화 
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = True

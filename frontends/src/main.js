@@ -1,19 +1,16 @@
-// import './assets/main.css'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import App from './App.vue';
+import router from './router'; // Vue Router
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+// Pinia 생성
+const pinia = createPinia();
 
-import App from './App.vue'
-import router from './router'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+const app = createApp(App);
 
-const app = createApp(App)
+// Pinia와 Router 등록
+app.use(pinia);
+app.use(router);
 
-const pinia = createPinia()
-pinia.use(piniaPluginPersistedstate)
-
-// app.use(createPinia())
-app.use(pinia)
-app.use(router)
-
-app.mount('#app')
+// Vue 애플리케이션 마운트
+app.mount('#app');
