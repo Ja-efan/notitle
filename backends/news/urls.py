@@ -9,4 +9,5 @@ urlpatterns = [
     path('', views.news_list, name="news_list"),
     path("news/<str:id>/", views.news_detail, name='news_detail'),
     path("news/<str:id>/accounts/", include('accounts.urls')),
+    path("news-analysis/", views.news_analysis, name='news_analysis'),
 ]
