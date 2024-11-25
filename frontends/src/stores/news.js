@@ -19,18 +19,6 @@ export const useNewsStore = defineStore('news', () => {
   // 선택된 카테고리 상태 
   const selectedCategory = ref('전체')
 
-  // const getNews = function() {
-  //   axios({
-  //     method: 'get',
-  //     url: `${API_URL}/api/v1/`
-  //   }).then((response) => {
-  //     console.log(response)
-  //     news.value = response.data
-  //   }).catch((error) => {
-  //     console.log(error)
-  //   })
-  // }
-
 
   const fetchNews = async () => {
     try {
@@ -39,6 +27,9 @@ export const useNewsStore = defineStore('news', () => {
         method: 'get',
         url: `${API_URL}/api/v1/`,
         params: { category: selectedCategory.value },
+        headers: { 
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
       });
       console.log(`${API_URL}/api/v1/`)
       console.log('API Response:', response.data)

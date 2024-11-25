@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import { useUserStore } from '@/stores/user';
 
+
+const userStore = useUserStore()
+const router = useRouter()
 const route = useRoute()
 const article = ref(null)
 const chatMessages = ref([
@@ -14,27 +18,40 @@ const messagesContainer = ref(null) // 메시지 컨테이너에 대한 참조
 const likes = ref(0) // 좋아요 수 상태 관리
 
 // API URL
-const API_URL = import.meta.env.VITE_DJANGO_API_URL
+const BASE_API_URL = import.meta.env.VITE_DJANGO_API_URL
 const CHATBOT_API_URL = import.meta.env.VITE_CHATBOT_API_URL
+const NEWS_LIKE_API_URL = import.meta.env.VITE_NEWSLIKE_API_URL
 
 // 뉴스 데이터 가져오기
 const fetchNewsDetail = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/v1/news/${route.params.id}/`)
+    const response = await axios.get(
+      `${NEWS_LIKE_API_URL}${route.params.id}/`,
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+        },
+      }
+    )
     article.value = response.data
-    likes.value = response.data.likes || 0 // 초기 좋아요 수
+    // likes.value = response.data.likes || 0 // 초기 좋아요 수
   } catch (error) {
     console.error('Failed to fetch news detail:', error)
   }
-}
 
-// 좋아요 버튼 클릭 함수
-const likeArticle = async () => {
-  likes.value += 1
+  // 좋아요 개수 가져오기 
   try {
-    await axios.post(`${API_URL}/api/v1/news/${route.params.id}/like/`) // 좋아요 API 호출
+    const response_likes= await axios.get(
+      `${NEWS_LIKE_API_URL}${route.params.id}/accounts/likes/`,
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+        },
+      }
+    )
+    likes.value = response_likes.data.like_count
   } catch (error) {
-    console.error('Failed to update likes:', error)
+      console.error('Failed to fetch like count:', error)
   }
 }
 
@@ -57,10 +74,17 @@ const sendMessage = async () => {
 
     // 백엔드로 질문 전송
     try {
-      const response = await axios.post(`${CHATBOT_API_URL}`, {
-        question: userInput.value,
-        article_id: route.params.id,
-      })
+      const response = await axios.post(CHATBOT_API_URL, 
+        { 
+          question: userInput.value,
+          article_id: route.params.id,
+        },
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+          },
+        }
+      )
       chatMessages.value.push({ sender: 'chatbot', text: response.data.answer })
     } catch (error) {
       chatMessages.value.push({
@@ -77,9 +101,62 @@ const sendMessage = async () => {
   }
 }
 
+const likeArticle = async () => {
+
+  // 추가 구현 (로그인 상태 확인)
+  if (!userStore.isLoggedIn()) {
+    alert('로그인이 필요합니다.')
+    router.push('/login')
+    return
+  }
+  try {
+    const response = await axios.post(
+      `${NEWS_LIKE_API_URL}${route.params.id}/accounts/like/`,
+      {
+        news_id: route.params.id,
+      }, 
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+        },
+      }
+    )
+    likes.value += 1
+    alert(response.data.message)
+  } catch (error) {
+    if (error.response?.status === 400) {
+      alert('이미 좋아요를 누르셨습니다.')
+    } else if (error.response?.status === 401) {
+      alert('로그인이 필요합니다.')
+    } else {
+      console.error('좋아요 처리 중 오류 발생:', error)
+    }
+  }
+}
+
+// 추가 구현 (좋아요 버튼 상태 변경)
+const alreadyLiked = ref(false)
+
+const checkIfLiked = async () => {
+  try {
+    const response = await axios.get(`${BASE_API_URL}/api/v1/news/${route.params.id}/accounts/is_liked/`, {
+      headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+        },
+    })
+    alreadyLiked.value = response.data.is_liked
+  } catch (error) {
+    console.error('좋아요 상태 확인 중 오류:', error)
+  }
+}
+
 onMounted(() => {
-  fetchNewsDetail()
+  fetchNewsDetail()  // 뉴스 상세 정보 로드
+  checkIfLiked()  // 좋아요 버튼 상태
+  // fetchLikeCount()  // 좋아요 개수 가져오기 
+
 })
+
 </script>
 
 <template>
@@ -96,7 +173,11 @@ onMounted(() => {
         </p>
         <p class="news-content">{{ article.content }}</p>
         <!-- 좋아요 버튼 -->
-        <button @click="likeArticle" class="like-button">
+        <button
+          :disabled="alreadyLiked"
+          @click="likeArticle"
+          class="like-button"
+        >
           👍 좋아요 {{ likes }}
         </button>
       </div>

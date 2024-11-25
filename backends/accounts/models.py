@@ -18,10 +18,15 @@ class Profile(models.Model):
 
 class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="activities")
-    news = models.ForeignKey("news.News", on_delete=models.CASCADE, related_name="user_activities")
+    news = models.ForeignKey("news.News", on_delete=models.CASCADE, related_name="user_activities", to_field="article_id")
     action_type = models.CharField(max_length=20, choices=[
         ("view", "View"),
         ("like", "Like"),
         ("share", "Share")
     ])
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('news', 'user', 'action_type')  # 중복 방지
+
+        
