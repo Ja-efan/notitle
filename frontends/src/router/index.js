@@ -6,6 +6,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import SignupView from '@/views/SignupView.vue'
 import NewsDetailView from '@/views/NewsDetailView.vue'
+import NewsAnalysisView from '@/views/NewsAnalysisView.vue'
 // import BoardCreateView from '@/views/BoardCreateView.vue'
 
 const router = createRouter({
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/news-analysis',
+      name: 'NewsAnalysis',
+      component: NewsAnalysisView,
     },
     {
       path: '/news/:id', // 동적 라우트 
