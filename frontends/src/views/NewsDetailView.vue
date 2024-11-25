@@ -26,7 +26,7 @@ const NEWS_LIKE_API_URL = import.meta.env.VITE_NEWSLIKE_API_URL
 const fetchNewsDetail = async () => {
   try {
     const response = await axios.get(
-      `${BASE_API_URL}/api/v1/news/${route.params.id}/`,
+      `${NEWS_LIKE_API_URL}${route.params.id}/`,
       {
         headers: {
           Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
@@ -34,9 +34,24 @@ const fetchNewsDetail = async () => {
       }
     )
     article.value = response.data
-    likes.value = response.data.likes || 0 // 초기 좋아요 수
+    // likes.value = response.data.likes || 0 // 초기 좋아요 수
   } catch (error) {
     console.error('Failed to fetch news detail:', error)
+  }
+
+  // 좋아요 개수 가져오기 
+  try {
+    const response_likes= await axios.get(
+      `${NEWS_LIKE_API_URL}${route.params.id}/accounts/likes/`,
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+        },
+      }
+    )
+    likes.value = response_likes.data.like_count
+  } catch (error) {
+      console.error('Failed to fetch like count:', error)
   }
 }
 
@@ -136,8 +151,10 @@ const checkIfLiked = async () => {
 }
 
 onMounted(() => {
-  fetchNewsDetail()
-  checkIfLiked()
+  fetchNewsDetail()  // 뉴스 상세 정보 로드
+  checkIfLiked()  // 좋아요 버튼 상태
+  // fetchLikeCount()  // 좋아요 개수 가져오기 
+
 })
 
 </script>
