@@ -2,21 +2,24 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 
-const store = useUserStore()
+
+const userStore = useUserStore()
 
 const username = ref(null)
+const email = ref(null) // 이메일 필드 추가
 const password1 = ref(null)
 const password2 = ref(null)
+
 
 const signUp = function() {
   const payload = {
     username: username.value,
+    email: email.value, // 이메일 포함
     password1: password1.value,
     password2: password2.value
   }
-  store.signUp(payload)
+  userStore.regist(payload)
 }
-
 </script>
 
 <template>
@@ -27,6 +30,11 @@ const signUp = function() {
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" v-model="username" placeholder="Enter your username" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label> <!-- 이메일 입력 필드 -->
+          <input type="email" id="email" v-model="email" placeholder="Enter your email" />
         </div>
 
         <div class="form-group">
@@ -46,7 +54,7 @@ const signUp = function() {
 </template>
 
 <style scoped>
-/* 전체 페이지 스타일 */
+/* 기존 스타일 그대로 유지 */
 .signup-container {
   display: flex;
   justify-content: center;
@@ -57,7 +65,6 @@ const signUp = function() {
   color: #333;
 }
 
-/* 카드 스타일 */
 .signup-card {
   background: #ffffff;
   border-radius: 8px;
@@ -68,14 +75,12 @@ const signUp = function() {
   text-align: center;
 }
 
-/* 제목 스타일 */
 .signup-title {
   margin-bottom: 20px;
   font-size: 1.8rem;
   color: #2575fc;
 }
 
-/* 폼 그룹 스타일 */
 .form-group {
   margin-bottom: 15px;
   text-align: left;
@@ -101,7 +106,6 @@ const signUp = function() {
   border-color: #2575fc;
 }
 
-/* 버튼 스타일 */
 .signup-button {
   display: block;
   width: 100%;
@@ -121,7 +125,6 @@ const signUp = function() {
   transform: translateY(-2px);
 }
 
-/* 반응형 디자인 */
 @media (max-width: 768px) {
   .signup-card {
     padding: 15px 20px;

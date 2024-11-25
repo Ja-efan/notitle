@@ -2,10 +2,17 @@
 import axios from 'axios';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore()
+const router = useRouter()
+
+// 입력 필드 상태 관리 
 const username = ref('')
 const password = ref('')
-const router = useRouter()
+
+// 로그인 상태 
+const errorMessage = ref('')
 
 const logIn = async () => {
   if (!username.value) {
@@ -22,11 +29,15 @@ const logIn = async () => {
       password: password.value,
     }
     // backend server로 login 요청 
-    const response = await axios.post("http://127.0.0.1:8000/dj-rest-auth/login/", payload)
+    // const response = await axios.post("http://127.0.0.1:8000/dj-rest-auth/login/", payload)
+    const response = await userStore.login(payload)
+    console.log(response)
+    console.log(response.data)
     // 로그인 성공 처리 
     alert("로그인 성공!")
     // 토큰 저장 
     localStorage.setItem('token', response.data.key)
+
     console.log("로그인 성공: ", response.data)
     router.push('/')
   } catch (error) {
@@ -34,6 +45,8 @@ const logIn = async () => {
     console.error("로그인 실패: ", error)
   }
 }
+
+
 
 const goSignUp = function () {
   router.push('/signup') // 회원가입 페이지로 이동

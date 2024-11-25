@@ -5,57 +5,62 @@ import axios from 'axios'
 // useRoute: 받을 때
 import { useRouter, useRoute } from 'vue-router'
 
+const LOGIN_API_URL = import.meta.env.VITE_LOGIN_API_URL;
+const USERINFO_API_URL = import.meta.env.VITE_USERINFO_API_URL;
+const REGIST_API_URL = import.meta.env.VITE_REGISTRATION_API_URL;
+
+
 export const useUserStore = defineStore('user', () => {
   // 나중에 배포할때는 API_URL 도 환경 변수로 빼줘야한다.
   // 내 PC 내부에서만 쓸 예정이니 하드코딩
-  const API_URL = 'http://127.0.0.1:8000'
   const router = useRouter()
   const token = ref(null)
   const loginUsername = ref(null)
 
-  const logIn = function (payload) {
+  const login = async function (payload) {
     const { username, password } = payload
-
-    axios({
-      method: 'post',
-      url: `${API_URL}/dj-rest-auth/login/`,
-      data: {
-        username,
-        password
-      }
-    })
-    // 성공 시 then, 실패 시 catch
-    .then((response) => {
+  
+    try {
+      const response = await axios({
+        method: 'post',
+        url: LOGIN_API_URL,
+        data: {
+          username,
+          password
+        }
+      })
+  
       console.log("response = ", response)
-      token.value = response.data.key
-      loginUsername.value = username
-      
-      router.push('/')
-    })
-    .catch((error) => {
-      console.log("error = ", error)
-    })
+      token.value = response.data.key // 토큰 저장
+      loginUsername.value = username // 사용자 이름 저장
+      return response // 비동기 결과 반환
+    } catch (error) {
+      console.error("error = ", error)
+      throw error // 에러를 호출한 곳으로 전달
+    }
   }
 
-  const signUp = function (payload) {
-    const { username, password1, password2 } = payload
+  const regist = function (payload) {
+    const { username, email, password1, password2 } = payload
 
     axios({
       method: 'post',
-      url: `${API_URL}/dj-rest-auth/registration/`,
+      url: REGIST_API_URL,
       data: {
         username,
+        email,
         password1,
         password2
       }
     }).then((response) => {
-      alert('회원가입 성공!')
-      logIn({ username, password: password1 })
+      alert('회원가입 성공! 로그인 페이지로 이동합니다.')
+      router.push('/login')
+      // logIn({ username, password: password1 })
     })
     .catch((error) => {
       console.log(error)
     })
   }
 
-  return { token, loginUsername, logIn, signUp }
+  return { token, loginUsername, login, regist }
 }, { persist: true })

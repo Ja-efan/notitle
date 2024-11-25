@@ -21,10 +21,10 @@ const userStore = useUserStore()
       <span v-if="userStore.loginUsername" class="username">
         {{ userStore.loginUsername }}님
       </span>
+      
     </div>
   </nav>
-
-  <!-- RouterView -->
+  
   <RouterView />
 </template>
 
