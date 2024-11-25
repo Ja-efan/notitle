@@ -11,8 +11,6 @@ const REGIST_API_URL = import.meta.env.VITE_REGISTRATION_API_URL;
 
 
 export const useUserStore = defineStore('user', () => {
-  // 나중에 배포할때는 API_URL 도 환경 변수로 빼줘야한다.
-  // 내 PC 내부에서만 쓸 예정이니 하드코딩
   const router = useRouter()
   const token = ref(null)
   const loginUsername = ref(null)
