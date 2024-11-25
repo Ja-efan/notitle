@@ -1,9 +1,21 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 
 // Pinia 스토어 불러오기
 const userStore = useUserStore()
+const router = useRouter()
+
+// 로그아웃 함수
+const logout = async () => {
+  try {
+    await userStore.logout()
+    router.push('/login') // 로그아웃 후 로그인 페이지로 이동
+  } catch (error) {
+    console.error('로그아웃 실패:', error)
+  }
+}
 </script>
 
 <template>
@@ -15,13 +27,16 @@ const userStore = useUserStore()
     <!-- 네비게이션 링크 -->
     <div class="nav-links">
       <RouterLink to="/">메인 페이지</RouterLink> |
-      <RouterLink to="/login">로그인</RouterLink> |
-      
-      <!-- 로그인된 사용자 이름 표시 -->
-      <span v-if="userStore.loginUsername" class="username">
-        {{ userStore.loginUsername }}님
-      </span>
-      
+      <RouterLink to="/news-analysis"> 뉴스 분석 페이지</RouterLink> |
+
+      <!-- 로그인 여부에 따라 버튼 표시 -->
+      <template v-if="userStore.loginUsername">
+        <button class="logout-button" @click="logout">로그아웃</button>
+        <span class="username">{{ userStore.loginUsername }}님</span>
+      </template>
+      <template v-else>
+        <RouterLink to="/login">로그인</RouterLink>
+      </template>
     </div>
   </nav>
   
@@ -80,5 +95,22 @@ nav a:hover {
   font-size: 1rem;
   font-weight: bold;
   margin-left: 10px;
+}
+
+/* 로그아웃 버튼 스타일 */
+.logout-button {
+  background-color: #ff5a57;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #e04747;
 }
 </style>
