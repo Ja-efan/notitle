@@ -1,10 +1,16 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useNewsStore } from '@/stores/news'
-import router from '@/router';
+// import router from '@/router';
+import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router'
 
 // Pinia 스토어 불러오기
 const newsStore = useNewsStore()
+const userStore = useUserStore()
+
+// router 설정
+const router = useRouter()
 
 // 초기 데이터 로드
 onMounted(() => {
@@ -13,6 +19,11 @@ onMounted(() => {
 })
 
 const goToDetail = (id) => {
+  if(!userStore.isLoggedIn()) {
+    alert('로그인이 필요합니다.')
+    router.push('/login')
+    return 
+  }
   console.log('사용자 선택 뉴스 ID: ', id)
   router.push({
     // 동적 라우트로 이동

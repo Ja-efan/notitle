@@ -28,8 +28,7 @@ const logIn = async () => {
       username: username.value,
       password: password.value,
     }
-    // backend server로 login 요청 
-    // const response = await axios.post("http://127.0.0.1:8000/dj-rest-auth/login/", payload)
+
     const response = await userStore.login(payload)
     console.log(response)
     console.log(response.data)
@@ -37,7 +36,7 @@ const logIn = async () => {
     alert("로그인 성공!")
     // 토큰 저장 
     localStorage.setItem('token', response.data.key)
-
+    // userStore.setUser(response.data.user) // 사용자 정보 저장
     console.log("로그인 성공: ", response.data)
     router.push('/')
   } catch (error) {

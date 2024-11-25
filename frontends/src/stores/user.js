@@ -17,6 +17,11 @@ export const useUserStore = defineStore('user', () => {
   const token = ref(null)
   const loginUsername = ref(null)
 
+  const isLoggedIn = () => {
+    // console.log(!!token.value)
+    return !!token.value // 토큰이 있으면 로그인 상태로 간주
+  }
+
   const login = async function (payload) {
     const { username, password } = payload
   
@@ -62,5 +67,5 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  return { token, loginUsername, login, regist }
+  return { token, isLoggedIn, loginUsername, login, regist }
 }, { persist: true })
