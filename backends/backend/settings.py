@@ -70,10 +70,16 @@ REST_FRAMEWORK = {
     ],
     # permission
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions. ',
     ],
 }
+
+# custon registerserializer
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+}
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

@@ -19,6 +19,9 @@ export const useNewsStore = defineStore('news', () => {
   // 선택된 카테고리 상태 
   const selectedCategory = ref('전체')
 
+  // 추천 뉴스 
+  const recommendedNews = ref([])
+
 
   const fetchNews = async () => {
     try {
@@ -27,9 +30,9 @@ export const useNewsStore = defineStore('news', () => {
         method: 'get',
         url: `${API_URL}/api/v1/`,
         params: { category: selectedCategory.value },
-        headers: { 
-          Authorization: `Token ${localStorage.getItem('token')}`
-        }
+        // headers: { 
+        //   Authorization: `Token ${localStorage.getItem('token')}`
+        // }
       });
       console.log(`${API_URL}/api/v1/`)
       console.log('API Response:', response.data)
@@ -45,5 +48,19 @@ export const useNewsStore = defineStore('news', () => {
     selectedCategory.value = category
     fetchNews() // API 호출
   }
-  return { news, selectedCategory, categories, fetchNews, selectCategory }
+
+  const fetchRecommendedNews = async () => {
+    try {
+      const response = await axios.get('/api/v1/recommended-news/', {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`,
+        },
+      });
+      recommendedNews.value = response.data;
+    } catch (error) {
+      console.error('추천 뉴스 가져오기 실패:', error);
+    }
+  };
+
+  return { news, selectedCategory, categories, fetchNews, selectCategory, fetchRecommendedNews}
 })

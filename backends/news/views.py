@@ -1,6 +1,7 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Count, Avg, F
@@ -8,13 +9,14 @@ from wordcloud import WordCloud
 from io import BytesIO
 import base64
 
-from .serializers import NewsListSerializer, NewsSerializer 
-from .models import News
+from .serializers import NewsListSerializer, NewsSerializer, CategorySerializer
+from .models import News, Category
 
 FONT_PATH = "/usr/share/fonts/truetype/nanum/NanumSquareRoundB.ttf"
 
 # 게시글 생성(POST), 전체 게시글 조회(GET)
 @api_view(['GET', 'POST'])
+@permission_classes([AllowAny])
 def news_list(request):
     if request.method == 'POST':
         # 사용자로부터 받은 입력을 포장
@@ -111,3 +113,28 @@ def news_analysis(request):
     except Exception as e:
         print(f"Error occured: {str(e)}")
         return Response({"error": str(e)}, status=500)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # 인증된 사용자만 접근 가능
+def liked_news(request):
+    user = request.user
+    # 좋아요 누른 뉴스 필터링
+    liked_news = News.objects.filter(user_activities__user=user, user_activities__action_type='like')
+    serializer = NewsSerializer(liked_news, many=True)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_categories(request):
+    """
+    모든 카테고리 목록을 반환하는 API 엔드포인트
+    """
+    try:
+        categories = Category.objects.all()  # 모든 카테고리 가져오기
+        print(categories)
+        serializer = CategorySerializer(categories, many=True)  # 카테고리 시리얼라이징
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

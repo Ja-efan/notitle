@@ -67,17 +67,21 @@ const scrollToBottom = () => {
 // 메시지 전송 함수
 const sendMessage = async () => {
   if (userInput.value.trim()) {
-    // 사용자 메시지 추가
-    chatMessages.value.push({ sender: 'user', text: userInput.value })
-    scrollToBottom() // 사용자 메시지 추가 후 스크롤 업데이트
-    isLoading.value = true
+    // 사용자 입력값 초기화 먼저 실행
+    const message = userInput.value; // 입력값을 미리 저장
+    userInput.value = ''; // 입력창 초기화
 
-    
+    // 사용자 메시지 추가
+    chatMessages.value.push({ sender: 'user', text: message });
+    scrollToBottom(); // 사용자 메시지 추가 후 스크롤 업데이트
+    isLoading.value = true;
+
     // 백엔드로 질문 전송
     try {
-      const response = await axios.post(CHATBOT_API_URL, 
-        { 
-          question: userInput.value,
+      const response = await axios.post(
+        CHATBOT_API_URL,
+        {
+          question: message,
           article_id: route.params.id,
         },
         {
@@ -85,23 +89,22 @@ const sendMessage = async () => {
             Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
           },
         }
-      )
-      userInput.value = ''
-      chatMessages.value.push({ sender: 'chatbot', text: response.data.answer })
+      );
+
+      // 챗봇 응답 추가
+      chatMessages.value.push({ sender: 'chatbot', text: response.data.answer });
     } catch (error) {
       chatMessages.value.push({
         sender: 'chatbot',
         text: '죄송합니다. 현재 답변을 제공할 수 없습니다.',
-      })
+      });
     } finally {
-      isLoading.value = false
+      isLoading.value = false;
+      scrollToBottom(); // 메시지 추가 후 스크롤 업데이트
     }
-
-    // 사용자 입력 필드 초기화
-    
-    scrollToBottom() // 메시지 추가 후 스크롤 업데이트
   }
-}
+};
+
 
 const likeArticle = async () => {
 

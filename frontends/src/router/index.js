@@ -7,6 +7,8 @@ import LoginView from '@/views/LoginView.vue'
 import SignupView from '@/views/SignupView.vue'
 import NewsDetailView from '@/views/NewsDetailView.vue'
 import NewsAnalysisView from '@/views/NewsAnalysisView.vue'
+import TailoredNewsView from '@/views/TailoredNewsView.vue'
+import ScrapView from '@/views/ScrapView.vue'
 // import BoardCreateView from '@/views/BoardCreateView.vue'
 
 const router = createRouter({
@@ -39,11 +41,18 @@ const router = createRouter({
       name: 'signup',
       component: SignupView,
     },
-    // {
-    //   path: '/create-board',
-    //   name: 'createBorad',
-    //   component: BoardCreateView,
-    // },
+    {
+      path: '/tailored-news',
+      name: 'TailoredNews',
+      component: TailoredNewsView,
+      meta: {requiresAuth: true}, // 인증 필요
+    },
+    {
+      path: '/scrap',
+      name: 'scarp',
+      component: ScrapView,  // 좋아요 기사 페이지 라우트
+      meta: {requiresAuth: true},  // 인증 필요 
+    },
   ],
 })
 

@@ -6,11 +6,25 @@ import { useRouter, useRoute } from 'vue-router'
 const LOGIN_API_URL = import.meta.env.VITE_LOGIN_API_URL;
 const USERINFO_API_URL = import.meta.env.VITE_USERINFO_API_URL;
 const REGIST_API_URL = import.meta.env.VITE_REGISTRATION_API_URL;
+const USER_PROFILE_API_URL = import.meta.env.VITE_USER_PROFILE_API_URL;
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const token = ref(null)
   const loginUsername = ref(null)
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(USER_PROFILE_API_URL, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`,
+        },
+      });
+      dislikedCategories.value = response.data.disliked_categories;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   const isLoggedIn = () => {
     return !!token.value // 토큰이 있으면 로그인 상태로 간주
@@ -25,7 +39,7 @@ export const useUserStore = defineStore('user', () => {
         url: LOGIN_API_URL,
         data: {
           username,
-          password
+          password,
         }
       })
   
@@ -40,7 +54,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const regist = function (payload) {
-    const { username, email, password1, password2 } = payload
+    const { username, email, password1, password2, disliked_categories } = payload
 
     axios({
       method: 'post',
@@ -49,7 +63,8 @@ export const useUserStore = defineStore('user', () => {
         username,
         email,
         password1,
-        password2
+        password2,
+        disliked_categories,
       }
     }).then((response) => {
       alert('회원가입 성공! 로그인 페이지로 이동합니다.')

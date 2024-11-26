@@ -99,7 +99,7 @@ onMounted(() => {
     createCategoryChart(category_distribution)
     createSentimentChart(sentiment_distribution)
     createTopAuthorsChart(top_authors)
-    console.log(wordcloud)
+    // console.log(wordcloud)
   })
 })
 </script>
@@ -130,12 +130,7 @@ onMounted(() => {
         <canvas id="categoryChart"></canvas>
       </div>
 
-      <!-- 상위 기자 차트 -->
-      <div>
-        <h3>상위 5명의 기자</h3>
-        <canvas id="authorsChart"></canvas>
-      </div>
-
+    
       <!-- 워드 클라우드 -->
       <div>
         <h3>상위 키워드 워드 클라우드</h3>

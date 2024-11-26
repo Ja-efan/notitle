@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.timezone import now
 from .models import UserActivity
 from news.models import News
+from .serializers import ProfileSerializer
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # 인증된 사용자만 접근 가능 
@@ -57,3 +58,17 @@ def get_news_like(request, id):
     like_count = UserActivity.objects.filter(news=news, action_type='like').count()
 
     return Response({'like_count': like_count}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])  # 로그인된 사용자만 접근 가능
+def user_profile(request):
+    print(request.user)
+    user = request.user  # 현재 요청한 사용자
+    if not hasattr(user, 'profile'):  # 사용자가 프로필을 가지지 않는 경우
+        return Response({"detail": "Profile not found."}, status=404)
+    
+    profile = user.profile
+    serializer = ProfileSerializer(profile)
+    print(f"{user}의 profile: {serializer }")
+    return Response(serializer.data, status=200)
