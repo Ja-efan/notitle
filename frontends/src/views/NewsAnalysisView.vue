@@ -120,7 +120,7 @@ onMounted(() => {
 
       <!-- 감성 점수 차트 -->
       <div>
-        <h3>평균 감성 점수</h3>
+        <h3>감성 점수 분포</h3>
         <canvas id="sentimentChart"></canvas>
       </div>
 
