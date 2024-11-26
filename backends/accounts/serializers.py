@@ -6,17 +6,16 @@ from accounts.models import Profile, Category
 from news.serializers import CategorySerializer
 
 class CustomRegisterSerializer(RegisterSerializer):
-    disliked_categories = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), many=True, required=False
-    )
+    disliked_categories = serializers.JSONField(required=False)  # JSON 필드
 
     def save(self, request):
         user = super().save(request)
         disliked_categories = self.validated_data.get('disliked_categories', [])
-        print(disliked_categories)
-        # Profile 생성 및 비선호 카테고리 연결
-        profile = Profile.objects.get_or_create(user=user)
-        profile.disliked_categories.set(disliked_categories)
+        print("Disliked Categories:", disliked_categories)
+        
+        # Profile 생성 및 JSON 필드 설정
+        profile, created = Profile.objects.get_or_create(user=user)
+        profile.disliked_categories = disliked_categories  # JSON 데이터 저장
         profile.save()
         
         return user

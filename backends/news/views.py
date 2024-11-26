@@ -132,9 +132,9 @@ def get_categories(request):
     """
     try:
         categories = Category.objects.all()  # 모든 카테고리 가져오기
-        print(categories)
+        # print(categories)
         serializer = CategorySerializer(categories, many=True)  # 카테고리 시리얼라이징
-        print(serializer.data)
+        # print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

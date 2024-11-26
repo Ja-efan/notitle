@@ -13,7 +13,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     date_of_birth = models.DateField(null=True, blank=True)
     preferred_categories = models.ManyToManyField(Category, related_name="preferred_by_users")
-    disliked_categories = models.ManyToManyField(Category, related_name="disliked_by_users")
+    disliked_categories = models.JSONField(default=list, blank=True)  # JSON 형식으로 비선호 카테고리 저장
     preferred_media_companies = models.ManyToManyField(MediaCompany, related_name="preferred_by_users")
 
 class UserActivity(models.Model):
