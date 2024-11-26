@@ -72,6 +72,7 @@ const sendMessage = async () => {
     scrollToBottom() // 사용자 메시지 추가 후 스크롤 업데이트
     isLoading.value = true
 
+    
     // 백엔드로 질문 전송
     try {
       const response = await axios.post(CHATBOT_API_URL, 
@@ -85,6 +86,7 @@ const sendMessage = async () => {
           },
         }
       )
+      userInput.value = ''
       chatMessages.value.push({ sender: 'chatbot', text: response.data.answer })
     } catch (error) {
       chatMessages.value.push({
@@ -96,7 +98,7 @@ const sendMessage = async () => {
     }
 
     // 사용자 입력 필드 초기화
-    userInput.value = ''
+    
     scrollToBottom() // 메시지 추가 후 스크롤 업데이트
   }
 }
@@ -164,6 +166,7 @@ onMounted(() => {
     <!-- 뉴스 기사 영역 -->
     <div class="news-container">
       <h3 class="news-header">뉴스 기사 상세보기</h3>
+      
       <div v-if="article" class="news-card">
         <p><strong>카테고리</strong> | <span class="news-category">{{ article.category_name }}</span></p>
         <p><span class="news-title">{{ article.title }}</span></p>
@@ -172,15 +175,19 @@ onMounted(() => {
           <span>{{ article.writer }} ({{ article.media_company_name }})</span>
         </p>
         <p class="news-content">{{ article.content }}</p>
+        <p class="news-keyword">{{ article.keyword }}</p>
         <!-- 좋아요 버튼 -->
-        <button
-          :disabled="alreadyLiked"
-          @click="likeArticle"
-          class="like-button"
-        >
-          👍 좋아요 {{ likes }}
-        </button>
+        <div class="like-button-container">
+          <button
+            :disabled="alreadyLiked"
+            @click="likeArticle"
+            class="like-button"
+          >
+            👍 좋아요 {{ likes }}
+          </button>
+        </div>
       </div>
+
       <div v-else class="loading-message">
         <p>뉴스 데이터를 불러오는 중...</p>
       </div>
@@ -273,6 +280,27 @@ h3 {
   font-size: 1rem;
   color: #444;
   text-align: justify;
+}
+/* 뉴스 키워드 스타일 */
+.news-keyword {
+  font-size: 0.9rem;
+  color: #ffffff;
+  font-weight: bold;
+  margin-top: 15px;
+  display: inline-block;
+  background: linear-gradient(45deg, #2575fc, #6c63ff); /* 그라데이션 배경 */
+  padding: 5px 10px;
+  border-radius: 12px;
+  text-transform: uppercase; /* 대문자로 변환 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  letter-spacing: 1px; /* 글자 간격 */
+}
+
+.news-keyword:hover {
+  background: linear-gradient(45deg, #6c63ff, #2575fc); /* 호버 시 반전된 그라데이션 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강조 */
+  transform: scale(1.05); /* 살짝 확대 효과 */
+  transition: all 0.3s ease; /* 부드러운 전환 효과 */
 }
 
 .like-button {

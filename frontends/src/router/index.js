@@ -21,6 +21,7 @@ const router = createRouter({
       path: '/news-analysis',
       name: 'NewsAnalysis',
       component: NewsAnalysisView,
+      meta: {requiresAuth: true}, // 로그인 필요
     },
     {
       path: '/news/:id', // 동적 라우트 
@@ -45,5 +46,21 @@ const router = createRouter({
     // },
   ],
 })
+
+// 네비게이션 가드
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const token = localStorage.getItem('token'); // 토큰 확인
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      next('/login'); // 로그인 페이지로 리디렉션
+    } else {
+      next(); // 인증된 경우 정상 이동
+    }
+  } else {
+    next(); // 인증이 필요 없는 페이지는 자유롭게 접근
+  }
+});
+
 
 export default router

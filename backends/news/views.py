@@ -83,6 +83,7 @@ def news_analysis(request):
             "top_authors": top_authors,
         }
 
+        # print(f"01. analysis_data: {analysis_data}")
         # 워드 클라우드를 위한 키워드 데이터 
         keywords = News.objects.values_list('keyword', flat=True)
         combined_keywords = " ".join(keywords)
@@ -103,6 +104,7 @@ def news_analysis(request):
 
         # 워드 클라우드 데이터를 응답에 포함 
         analysis_data['wordcloud'] = wordcloud_base64
+        # print(f"02. analysis_data: {analysis_data}")
 
         # print(analysis_data)
         return Response(analysis_data, status=200)

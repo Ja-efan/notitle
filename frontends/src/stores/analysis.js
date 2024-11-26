@@ -16,11 +16,18 @@ export const useAnalysisStore = defineStore('analysis', {
       this.error = null; // 에러 초기화
       try {
         console.log("요청 URL: ", ANALYSIS_API_URL);
-        const response = await axios.get(ANALYSIS_API_URL); // API 엔드포인트
+        const response = await axios.get(
+          ANALYSIS_API_URL,
+          {
+            headers: {
+              Authorization: `Token ${localStorage.getItem('token')}`, // dj-rest-auth 토큰 사용
+            },
+          }
+        ); // API 엔드포인트
         this.analysisData = response.data;
         console.log(response.data)
       } catch (error) {
-        this.analysisData = null; // 기존 데이터를 초기화
+        // this.analysisData = null; // 기존 데이터를 초기화
         this.error = '데이터를 가져오는 데 실패했습니다.';
       } finally {
         this.loading = false; // 로딩 상태 종료

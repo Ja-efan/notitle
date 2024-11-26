@@ -56,20 +56,23 @@ const goToDetail = (id) => {
         class="news-card" 
         v-for="article in newsStore.news" 
         :key="article.article_id"
-        @click="goToDetail(article.article_id)"> <!--클릭 이벤트 추가-->
+        @click="goToDetail(article.article_id)"
+      >
         <h2 class="news-header">{{ article.title }}</h2>
         <p class="news-summary">{{ article.summary }}</p>
         <p class="news-keyword">{{ article.keyword }}</p>
-        <!-- <p class="news-content">{{ article.content }}</p> -->
+        <p class="news-date">📅 {{ article.published_date.substring(0,10) }}</p>
+        <!-- 날짜를 출력하는 부분 추가 -->
+
         <div class="news-footer">
           <span class="news-category">카테고리: {{ article.category_name }}</span>
-          <!-- <span class="news-writer">작성자: {{ article.writer }}</span> -->
           <span class="news-media-company">{{ article.media_company_name }}</span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 /* 스타일 정의 (이전과 동일) */

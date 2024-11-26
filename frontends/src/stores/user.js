@@ -1,14 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-// useRouter: 특정 경로로 보낼 때
-// useRoute: 받을 때
 import { useRouter, useRoute } from 'vue-router'
 
 const LOGIN_API_URL = import.meta.env.VITE_LOGIN_API_URL;
 const USERINFO_API_URL = import.meta.env.VITE_USERINFO_API_URL;
 const REGIST_API_URL = import.meta.env.VITE_REGISTRATION_API_URL;
-
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter()
@@ -16,7 +13,6 @@ export const useUserStore = defineStore('user', () => {
   const loginUsername = ref(null)
 
   const isLoggedIn = () => {
-    // console.log(!!token.value)
     return !!token.value // 토큰이 있으면 로그인 상태로 간주
   }
 
@@ -58,12 +54,33 @@ export const useUserStore = defineStore('user', () => {
     }).then((response) => {
       alert('회원가입 성공! 로그인 페이지로 이동합니다.')
       router.push('/login')
-      // logIn({ username, password: password1 })
     })
     .catch((error) => {
       console.log(error)
     })
   }
 
-  return { token, isLoggedIn, loginUsername, login, regist }
-}, { persist: true })
+  const logout = async function () {
+    try {
+      token.value = null // 토큰 초기화
+      loginUsername.value = null // 사용자 이름 초기화
+      localStorage.removeItem('token') // 로컬스토리지에서 토큰 삭제
+      alert('로그아웃 되었습니다.')
+      router.push('/login') // 로그아웃 후 로그인 페이지로 이동
+    } catch (error) {
+      console.error('로그아웃 실패:', error)
+    }
+  }
+
+  return { token, isLoggedIn, loginUsername, login, regist, logout }
+}, {
+  persist: {
+    enabled: true, // persist 활성화
+    strategies: [
+      {
+        key: 'user', // 로컬 스토리지에 저장될 키 이름
+        storage: localStorage, // 저장소: localStorage
+      }
+    ],
+  },
+})

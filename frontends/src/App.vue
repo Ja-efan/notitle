@@ -11,7 +11,7 @@ const router = useRouter()
 const logout = async () => {
   try {
     await userStore.logout()
-    router.push('/login') // 로그아웃 후 로그인 페이지로 이동
+    // router.push('/login') // 로그아웃 후 로그인 페이지로 이동
   } catch (error) {
     console.error('로그아웃 실패:', error)
   }
