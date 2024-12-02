@@ -55,7 +55,7 @@ export const useUserStore = defineStore('user', () => {
 
   const regist = function (payload) {
     const { username, email, password1, password2, disliked_categories } = payload
-
+    console.log("사용자 선택 비선호 카테고리: ", disliked_categories)
     axios({
       method: 'post',
       url: REGIST_API_URL,
